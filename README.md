@@ -10,6 +10,8 @@ La interfaz se subdivide en 3 secciones **(Form. Tabla, Chart).**
 * La sección Tabla debe mostrar la lista actual de post (esto incluye los post existentes y los nuevos creados desde el Form, los nuevos post deben aparecer al principio de la tabla)
 * La sección Chart debe mostrar el gráfico de Dona agrupado según la cantidad de posts por usuario (para esto puede usar la propiedad UserID que se devuelve la lista de los posts).
 
+Ejemplo: https://www.loom.com/share/bd549ae5a0a54afda4d882b83c235603
+
 > Usted deberá utilizar React Hooks, Fetch, Asyng/Await, Arrow functions y el patrón de componentes controlados de react.
  
 ## Documentación del API
