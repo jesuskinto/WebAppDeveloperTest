@@ -2,7 +2,7 @@
 La siguiente prueba tiene como objetivo evaluar tu conocimiento esencial en React, Consumo de Apis.
 
 
-La interfaz se subdivide en 3 secciones (Form. Tabla, Chart).
+La interfaz se subdivide en 3 secciones **(Form. Tabla, Chart).**
 
 ## Objetivos
 
@@ -15,3 +15,20 @@ La interfaz se subdivide en 3 secciones (Form. Tabla, Chart).
 ## Documentación del API
 La documentación del API la podrás encontrar en:
 https://jsonplaceholder.typicode.com/guide/
+
+
+
+## Inicio
+
+Para ejecutar el proyecto sin problema le sugerimos tener instalado ``NodeJs^v18`` y ``Yarn^v1``.
+
+Luego dirígete a la carpeta principal del proyecto y ejecuta:
+
+ ```bash
+ yarn install
+ yarn run start
+ ```
+
+## Entrega
+
+Para entregar la prueba solo necesitas solicitar Merge con los cambios desde Github.
