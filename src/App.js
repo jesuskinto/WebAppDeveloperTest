@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   Button,
@@ -19,6 +19,8 @@ import {
 
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js'
+import { sendPost, getPosts } from './services';
+import { getRandomColor, repeatCounterElement } from './utils'
 
 import './App.css';
 
@@ -27,18 +29,29 @@ Chart.register(ArcElement);
 
 function App() {
 
-  const [doughnutData, setDoughnutData] = useState([1, 2, 3])
+  const [doughnutData, setDoughnutData] = useState([])
+  const [title, setTitle] = useState("")
+  const [body, setBody] = useState("")
+  const [listOfPosts, setListOfPost] = useState([])
 
-  const getRandomColor = count => {
-    var colors = [];
-    for (var i = 0; i < count; i++) {
-      var letters = '0123456789ABCDEF'.split('');
-      var color = '#';
-      for (var x = 0; x < 6; x++) color += letters[Math.floor(Math.random() * 16)];
-      colors.push(color);
-    }
-    return colors;
+  const handleClickAdd = async (event) => {
+    event.preventDefault()
+    const responseSendPost = sendPost(title, body);
+    responseSendPost.then((data) => {
+      setListOfPost(current => [data, ...current]);
+      setDoughnutData(repeatCounterElement(listOfPosts))
+    })
   }
+
+
+  useEffect(() => {
+    const responseGetPosts = getPosts();
+    responseGetPosts.then((data) => {
+      setListOfPost(data);
+      setDoughnutData(repeatCounterElement(data))
+    })
+
+  }, [])
 
   const getForm = () => {
     return <Card sx={{ minWidth: 275 }}>
@@ -47,9 +60,9 @@ function App() {
           Form
         </Typography>
         <Stack spacing={2}>
-          <TextField size='small' label="Title" variant="outlined" />
-          <TextField size='small' label="Body" variant="outlined" />
-          <Button variant="contained">Add</Button>
+          <TextField size='small' label="Title" variant="outlined" onChange={(event) => setTitle(event.target.value)} />
+          <TextField size='small' label="Body" variant="outlined" onChange={(event) => setBody(event.target.value)} />
+          <Button variant="contained" onClick={handleClickAdd} >Add</Button>
         </Stack>
       </CardContent>
     </Card>
@@ -72,11 +85,15 @@ function App() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell>userId</TableCell>
-                  <TableCell>title</TableCell>
-                  <TableCell>body</TableCell>
-                </TableRow>
+                {
+                  listOfPosts.map((elem) => (
+                    <TableRow key={`${elem.id}${elem.title}`}>
+                      <TableCell>{elem.userId}</TableCell>
+                      <TableCell>{elem.title}</TableCell>
+                      <TableCell>{elem.body}</TableCell>
+                    </TableRow>
+                  ))
+                }
               </TableBody>
             </Table>
           </TableContainer>
