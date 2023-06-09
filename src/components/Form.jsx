@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Card,
     CardContent,
@@ -8,7 +8,21 @@ import {
     Stack
 } from '@mui/material';
 
-const Form = () => {
+const Form = ({ onAdd }) => {
+  const [formData, setFormData] = useState({ title: '', body: '' });
+
+  const handleDataChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleAddClick = () => {
+    onAdd(formData);
+    setFormData({ title: '', body: '' });
+  };
+
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
@@ -16,9 +30,23 @@ const Form = () => {
           Form
         </Typography>
         <Stack spacing={2}>
-          <TextField size='small' label="Title" variant="outlined" />
-          <TextField size='small' label="Body" variant="outlined" />
-          <Button variant="contained">Add</Button>
+          <TextField 
+            size='small' 
+            label="Title" 
+            variant="outlined"
+            name='title'
+            value={formData.title}
+            onChange={handleDataChange}
+          />
+          <TextField 
+            size='small' 
+            label="Body" 
+            variant="outlined" 
+            name='body'
+            value={formData.body}
+            onChange={handleDataChange}
+          />
+          <Button variant="contained" onClick={handleAddClick}>Add</Button>
         </Stack>
       </CardContent>
     </Card>
