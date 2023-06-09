@@ -2,7 +2,6 @@
 import { useState } from 'react';
 
 import {
-  Button,
   Stack,
   Card,
   Table,
@@ -13,12 +12,12 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField,
   CardContent
 } from '@mui/material';
 
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js'
+import Form from './components/Form';
 
 import './App.css';
 
@@ -41,18 +40,7 @@ function App() {
   }
 
   const getForm = () => {
-    return <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Form
-        </Typography>
-        <Stack spacing={2}>
-          <TextField size='small' label="Title" variant="outlined" />
-          <TextField size='small' label="Body" variant="outlined" />
-          <Button variant="contained">Add</Button>
-        </Stack>
-      </CardContent>
-    </Card>
+    return <Form />
   }
 
   const getTable = () => {
