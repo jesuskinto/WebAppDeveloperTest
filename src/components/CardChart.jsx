@@ -5,8 +5,9 @@ import {
   Typography,
 } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
+import getRandomColor from '../utils/getRandomColor';
 
-const CardChart = ({ doughnutData, getRandomColor }) => {
+const CardChart = ({ doughnutData }) => {
   return (
     <Card sx={{ width: 400 }}>
       <CardContent>
@@ -17,7 +18,7 @@ const CardChart = ({ doughnutData, getRandomColor }) => {
           data={{
             datasets: [{
               data: doughnutData,
-              backgroundColor: getRandomColor(doughnutData.length)
+              backgroundColor: getRandomColor(doughnutData && doughnutData.length)
             }]
           }}
         />
