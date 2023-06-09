@@ -31,7 +31,6 @@ const DataTable = ({posts}) => {
             <TableBody>
               {posts &&
                 posts.map((post, index) => {
-                  console.log(post);
                   return (
                     <TableRow key={index}>
                       <TableCell>{post.userId}</TableCell>

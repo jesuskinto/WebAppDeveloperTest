@@ -11,9 +11,10 @@ import {
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js'
 import Form from './components/Form';
+import DataTable from './components/DataTable';
+import CardChart from './components/CardChart';
 
 import './App.css';
-import DataTable from './components/DataTable';
 
 Chart.register(ArcElement);
 
@@ -51,19 +52,9 @@ function App() {
   }
 
   const getCardChart = () => {
-    return <Card sx={{ width: 400 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Chart
-        </Typography>
-        <Doughnut data={{
-          datasets: [{
-            data: doughnutData,
-            backgroundColor: getRandomColor(doughnutData.length)
-          }]
-        }} />
-      </CardContent>
-    </Card>
+    return (
+      <CardChart doughnutData={doughnutData} getRandomColor={getRandomColor}/>
+    )
   }
 
   return (
