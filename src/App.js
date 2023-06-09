@@ -1,43 +1,43 @@
 
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
 import {
   Stack,
-  Card,
-  Typography,
-  CardContent
 } from '@mui/material';
-
-import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js'
 import Form from './components/Form';
 import DataTable from './components/DataTable';
 import CardChart from './components/CardChart';
-
+import getPosts from './services/getPosts';
+import usePostCountByUser from './hooks/usePostCountByUser';
 import './App.css';
 
 Chart.register(ArcElement);
 
-
 function App() {
 
-  const [doughnutData, setDoughnutData] = useState([1, 2, 3])
+  const [doughnutData, setDoughnutData] = useState()
   const [data, setData] = useState([]);
 
   const handleAddData = (newData) => {
     setData((prevData) => [...prevData, newData]);
   };
 
-  const getRandomColor = count => {
-    var colors = [];
-    for (var i = 0; i < count; i++) {
-      var letters = '0123456789ABCDEF'.split('');
-      var color = '#';
-      for (var x = 0; x < 6; x++) color += letters[Math.floor(Math.random() * 16)];
-      colors.push(color);
-    }
-    return colors;
-  }
+  const countByUserId = usePostCountByUser(data);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const postsFromAPI = await getPosts();
+      const combinedPosts = [...data, ...postsFromAPI];
+      setData(combinedPosts);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const doughnutData = Object.values(countByUserId);
+    setDoughnutData(doughnutData);
+  }, [countByUserId]);
+
 
   const getForm = () => {
     return (
@@ -53,7 +53,7 @@ function App() {
 
   const getCardChart = () => {
     return (
-      <CardChart doughnutData={doughnutData} getRandomColor={getRandomColor}/>
+      <CardChart doughnutData={doughnutData} />
     )
   }
 
