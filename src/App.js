@@ -4,14 +4,7 @@ import { useState } from 'react';
 import {
   Stack,
   Card,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
   Typography,
-  TableHead,
-  TableRow,
-  Paper,
   CardContent
 } from '@mui/material';
 
@@ -20,6 +13,7 @@ import { Chart, ArcElement } from 'chart.js'
 import Form from './components/Form';
 
 import './App.css';
+import DataTable from './components/DataTable';
 
 Chart.register(ArcElement);
 
@@ -27,6 +21,11 @@ Chart.register(ArcElement);
 function App() {
 
   const [doughnutData, setDoughnutData] = useState([1, 2, 3])
+  const [data, setData] = useState([]);
+
+  const handleAddData = (newData) => {
+    setData((prevData) => [...prevData, newData]);
+  };
 
   const getRandomColor = count => {
     var colors = [];
@@ -40,36 +39,14 @@ function App() {
   }
 
   const getForm = () => {
-    return <Form />
+    return (
+      <Form onAdd={handleAddData}/>
+    )
   }
 
   const getTable = () => {
     return (
-      <Card>
-        <CardContent>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Table
-          </Typography>
-          <TableContainer sx={{ width: 650 }} component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>User ID</TableCell>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Body</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>userId</TableCell>
-                  <TableCell>title</TableCell>
-                  <TableCell>body</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
+      <DataTable posts={data} />
     )
   }
 

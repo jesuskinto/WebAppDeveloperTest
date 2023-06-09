@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 
 const Form = ({ onAdd }) => {
-  const [formData, setFormData] = useState({ title: '', body: '' });
+  const [formData, setFormData] = useState({ userId: 1, title: '', body: '' });
 
   const handleDataChange = (event) => {
     setFormData({
@@ -20,7 +20,7 @@ const Form = ({ onAdd }) => {
 
   const handleAddClick = () => {
     onAdd(formData);
-    setFormData({ title: '', body: '' });
+    setFormData({ userId: 1, title: '', body: '' });
   };
 
   return (
