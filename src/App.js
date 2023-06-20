@@ -1,112 +1,76 @@
+import { useEffect, useState } from "react";
 
-import { useState } from 'react';
+import { Stack, Alert } from "@mui/material";
 
-import {
-  Button,
-  Stack,
-  Card,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  Typography,
-  TableHead,
-  TableRow,
-  Paper,
-  TextField,
-  CardContent
-} from '@mui/material';
+import "./App.css";
+import { MemoizedAppTable } from "./components/AppTable";
+import { MemoizedAppCardChart } from "./components/AppCardChart";
+import { AppForm } from "./components/AppForm";
 
-import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement } from 'chart.js'
-
-import './App.css';
-
-Chart.register(ArcElement);
-
+import { getPosts, createPost } from "./services/postService";
 
 function App() {
+  const [posts, setPosts] = useState([]);
+  const [postTitle, setPostTitle] = useState("");
+  const [postBody, setPostBody] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [creatingPost, setCreatingPost] = useState(false);
+  const [errorLoading, setErrorLoading] = useState(false);
+  const [errorUploading, setErrorUploading] = useState(false);
 
-  const [doughnutData, setDoughnutData] = useState([1, 2, 3])
+  useEffect(() => {
+    setLoading(true);
+    getPosts()
+      .then((response) => setPosts(response))
+      .catch(() => setErrorLoading(true))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const getRandomColor = count => {
-    var colors = [];
-    for (var i = 0; i < count; i++) {
-      var letters = '0123456789ABCDEF'.split('');
-      var color = '#';
-      for (var x = 0; x < 6; x++) color += letters[Math.floor(Math.random() * 16)];
-      colors.push(color);
-    }
-    return colors;
-  }
+  const handlePostTitleChange = (e) => {
+    const newPostTitleValue = e.target.value;
+    setPostTitle(`${newPostTitleValue}`);
+  };
 
-  const getForm = () => {
-    return <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Form
-        </Typography>
-        <Stack spacing={2}>
-          <TextField size='small' label="Title" variant="outlined" />
-          <TextField size='small' label="Body" variant="outlined" />
-          <Button variant="contained">Add</Button>
-        </Stack>
-      </CardContent>
-    </Card>
-  }
+  const handlePostBodyChange = (e) => {
+    const newPostBodyValue = e.target.value;
+    setPostBody(`${newPostBodyValue}`);
+  };
 
-  const getTable = () => {
-    return (
-      <Card>
-        <CardContent>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Table
-          </Typography>
-          <TableContainer sx={{ width: 650 }} component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>User ID</TableCell>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Body</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>userId</TableCell>
-                  <TableCell>title</TableCell>
-                  <TableCell>body</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  const getCardChart = () => {
-    return <Card sx={{ width: 400 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Chart
-        </Typography>
-        <Doughnut data={{
-          datasets: [{
-            data: doughnutData,
-            backgroundColor: getRandomColor(doughnutData.length)
-          }]
-        }} />
-      </CardContent>
-    </Card>
-  }
+  const handleAddPost = () => {
+    setCreatingPost(true);
+    createPost({ postTitle: postTitle, postBody: postBody })
+      .then((response) => {
+        setPosts((posts) => [...posts, { ...response, id: posts.length + 1 }]);
+        setErrorUploading(false);
+        setPostTitle("");
+        setPostBody("");
+      })
+      .catch(() => {
+        setErrorUploading(true);
+      })
+      .finally(() => setCreatingPost(false));
+  };
 
   return (
     <div className="App">
       <Stack spacing={2} direction="row">
-        {getForm()}
-        {getTable()}
-        {getCardChart()}
+        <AppForm
+          postTitle={postTitle}
+          handlePostTitleChange={handlePostTitleChange}
+          postBody={postBody}
+          handlePostBodyChange={handlePostBodyChange}
+          handleAddPost={handleAddPost}
+          creatingPost={creatingPost}
+          errorUploading={errorUploading}
+        />
+        {loading ? (
+          "loading..."
+        ) : errorLoading ? (
+          <Alert severity="error">An error occurred loading posts</Alert>
+        ) : (
+          <MemoizedAppTable posts={posts ?? []} />
+        )}
+        {loading ? null : <MemoizedAppCardChart posts={posts} />}
       </Stack>
     </div>
   );
